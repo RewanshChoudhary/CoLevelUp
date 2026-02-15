@@ -15,6 +15,11 @@ func main() {
 	e.GET("/", func(c *echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+	err := pkg.utils.InitDB()
+	if err != nil {
+		panic("Postgres connection error")
+	}
+	
 
 	if err := e.Start(":1323"); err != nil {
 		e.Logger.Error("failed to start server", "error", err)

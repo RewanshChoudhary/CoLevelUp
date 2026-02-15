@@ -1,0 +1,5 @@
+.env
+MakeFile
+.git
+vendor/
+
