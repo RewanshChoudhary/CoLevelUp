@@ -2,7 +2,11 @@ module github.com/RewanshChoudhary/CoLevelUp.git
 
 go 1.25.6
 
-require github.com/labstack/echo/v5 v5.0.3
+require (
+	github.com/gorilla/websocket v1.5.3
+	github.com/labstack/echo/v5 v5.0.3
+	golang.org/x/net v0.49.0
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
