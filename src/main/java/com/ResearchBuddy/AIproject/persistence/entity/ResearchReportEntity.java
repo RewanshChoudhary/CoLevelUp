@@ -3,6 +3,7 @@ package com.ResearchBuddy.AIproject.persistence.entity;
 import com.ResearchBuddy.AIproject.persistence.entity.enums.OutputFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -17,67 +18,70 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "research_reports")
 public class ResearchReportEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "job_id", nullable = false, unique = true)
-    private ResearchJobEntity job;
+  @OneToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "job_id", nullable = false, unique = true)
+  private ResearchJobEntity job;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "user_id", nullable = false)
+  private UserEntity user;
 
-    @Column(nullable = false, columnDefinition = "text")
-    private String summary;
+  @Column(nullable = false, columnDefinition = "text")
+  private String summary;
 
-    @Column(name = "key_findings", nullable = false, columnDefinition = "jsonb")
-    private String keyFindings = "[]";
+  @Column(name = "key_findings", nullable = false, columnDefinition = "jsonb")
+  private String keyFindings = "[]";
 
-    @Column(name = "fact_check_verdict", columnDefinition = "text")
-    private String factCheckVerdict;
+  @Column(name = "fact_check_verdict", columnDefinition = "text")
+  private String factCheckVerdict;
 
-    @Column(name = "confidence_score", precision = 4, scale = 3)
-    private BigDecimal confidenceScore;
+  @Column(name = "confidence_score", precision = 4, scale = 3)
+  private BigDecimal confidenceScore;
 
-    @Column(name = "analyst_insights", columnDefinition = "jsonb")
-    private String analystInsights;
+  @Column(name = "analyst_insights", columnDefinition = "jsonb")
+  private String analystInsights;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "output_format", nullable = false, length = 20)
-    private OutputFormat outputFormat = OutputFormat.JSON;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "output_format", nullable = false, length = 20)
+  private OutputFormat outputFormat = OutputFormat.JSON;
 
-    @Column(name = "total_sources_found", nullable = false)
-    private Integer totalSourcesFound = 0;
+  @Column(name = "total_sources_found", nullable = false)
+  private Integer totalSourcesFound = 0;
 
-    @Column(name = "total_sources_processed", nullable = false)
-    private Integer totalSourcesProcessed = 0;
+  @Column(name = "total_sources_processed", nullable = false)
+  private Integer totalSourcesProcessed = 0;
 
-    @Column(name = "total_time_ms", nullable = false)
-    private Integer totalTimeMs = 0;
+  @Column(name = "total_time_ms", nullable = false)
+  private Integer totalTimeMs = 0;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
-    @PrePersist
-    void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        if (keyFindings == null || keyFindings.isBlank()) {
-            keyFindings = "[]";
-        }
+  @PrePersist
+  void onCreate() {
+    if (createdAt == null) {
+      createdAt = LocalDateTime.now();
     }
+    if (keyFindings == null || keyFindings.isBlank()) {
+      keyFindings = "[]";
+    }
+  }
 }
