@@ -4,5 +4,6 @@ public enum ResearchDomain {
     GENERAL,
     MEDICAL,
     LEGAL,
+    TECHNICAL,
     OTHER
 }
