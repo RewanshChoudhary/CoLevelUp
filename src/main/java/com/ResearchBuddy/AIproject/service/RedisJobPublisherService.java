@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.connection.stream.MapRecord;
+import org.springframework.data.redis.connection.RedisStreamCommands;
+import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,15 @@ public class RedisJobPublisherService {
   private final StringRedisTemplate redis;
 
   public void publish(UUID jobId, UUID userID, String depth) {
-    redis.opsForStream().add(MapRecord.create(JOB_STREAM,
-        Map.of("jobId", jobId.toString(),
-            "userID", userID.toString(),
-            "depth", depth,
-            "attempts", "0")));
+    Map<String, String> payload = Map.of("jobId", jobId.toString(),
+        "userID", userID.toString(),
+        "depth", depth,
+        "attempts", "0");
+    redis.opsForStream().add(
+        StreamRecords
+            .mapBacked(payload)
+            .withStreamKey(JOB_STREAM),
+        RedisStreamCommands.XAddOptions.maxlen(10000).approximateTrimming(true));
 
   }
 

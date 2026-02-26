@@ -15,6 +15,7 @@ import com.ResearchBuddy.AIproject.persistence.dto.ResearchRequest;
 import com.ResearchBuddy.AIproject.persistence.entity.UserEntity;
 import com.ResearchBuddy.AIproject.service.ResearchRequestService;
 
+import dev.langchain4j.model.output.Response;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -32,12 +33,16 @@ public class ClientResearchController {
     UserEntity user = RequestUserContext.getAuthenticatedUser(request).orElseThrow();
     ResearchJobAcceptedResponse response = requestService.createRequest(user, researchRequest);
     return ResponseEntity.status(HttpStatus.ACCEPTED)
+        .header("Location", response.getPollUrl())
         .body(response);
 
   }
 
   @GetMapping("/jobs/{jobId}")
-  public ResponseEntity<ResearchJobStatusResponse> fetchResearchStatus(@PathVariable String jobId) {
+  public ResponseEntity<ResearchJobStatusResponse> fetchResearchStatus(@PathVariable String jobId,
+      HttpServletRequest request) {
+    UserEntity user = RequestUserContext.getAuthenticatedUser(request).orElseThrow();
+    return ResponseEntity.ok(requestService.getStatus(jobId, user.getId()));
 
   }
 
